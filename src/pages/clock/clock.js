@@ -6,20 +6,20 @@ for (let i = 0; i < assetNumber.length; i++) {
   imageCache.push(img)
 }
 
-
-const timer = document.getElementById("timer")
-timer.height = 400
-timer.width = 400
-const timerContext = timer.getContext("2d")
-const img = new Image()
-img.addEventListener("onload", () => {
-  timerContext.drawImage(img, 10, 10, 100, 100);
-
-})
-timerContext.fillStyle = "green"
-timerContext.fillRect(10, 10, 64, 64)
-img.scr = assetNumber[0]
-
+//
+// const timer = document.getElementById("timer")
+// timer.height = 400
+// timer.width = 400
+// const timerContext = timer.getContext("2d")
+// const img = new Image()
+// img.addEventListener("onload", () => {
+//   timerContext.drawImage(img, 10, 10, 100, 100);
+//
+// })
+// timerContext.fillStyle = "green"
+// timerContext.fillRect(10, 10, 64, 64)
+// img.scr = assetNumber[0]
+//
 const cavas = document.getElementById("canvas")
 cavas.height = 420
 cavas.width = 500
