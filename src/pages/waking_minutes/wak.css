@@ -1,0 +1,26 @@
+.row-style{
+  display:flex;
+  padding: 10px;
+  justify-content: space-between;
+  background:#333;
+
+
+}
+.table-style{
+ padding:2rem; 
+  
+}
+.background-red{
+  color:red;
+  background-color:red;
+}
+.cell-style{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:2px black;
+  width:40px;
+  height:40px;
+  background:white;
+  border:2px solid white
+}

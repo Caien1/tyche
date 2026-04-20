@@ -1,0 +1,13 @@
+import num0 from "./assets/0.webp"
+import num1 from "./assets/1.webp"
+import num2 from "./assets/2.webp"
+import num3 from "./assets/3.webp"
+import num4 from "./assets/4.webp"
+import num5 from "./assets/5.webp"
+import num6 from "./assets/6.webp"
+import num7 from "./assets/7.webp"
+import num8 from "./assets/8.webp"
+import num9 from "./assets/9.webp"
+import sep from "./assets/seperator.webp"
+
+export const assetNumber = [num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, sep]
