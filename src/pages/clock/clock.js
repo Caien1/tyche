@@ -5,43 +5,87 @@ for (let i = 0; i < assetNumber.length; i++) {
   img.src = assetNumber[i]
   imageCache.push(img)
 }
+const timer_info = {
+  hh: 0,
+  mm: 0,
+  ss: 0,
+  started: false,
+  ms: 60000,
+}
 
+const toggle = document.getElementById("start_stop")
+toggle.addEventListener("click", () => {
+
+  timer_info.ms = new Date().setSeconds(new Date().getSeconds() +
+    (timer_info.hh * Math.pow(60, 2) + timer_info.mm * 60 + timer_info.ss))
+  if (timer_info.started) {
+    toggle.innerHTML = "Start"
+    timer_info.started = false
+  } else {
+
+    toggle.innerHTML = "Stop"
+    timer_info.started = true
+  }
+})
 //
-// const timer = document.getElementById("timer")
-// timer.height = 400
-// timer.width = 400
-// const timerContext = timer.getContext("2d")
-// const img = new Image()
-// img.addEventListener("onload", () => {
-//   timerContext.drawImage(img, 10, 10, 100, 100);
-//
+// const setting = document.getElementById("setting");
+// setting.addEventListener("click", () => {
+//   console.log("Setting")
 // })
-// timerContext.fillStyle = "green"
-// timerContext.fillRect(10, 10, 64, 64)
-// img.scr = assetNumber[0]
-//
+const save = document.getElementById("save")
+save.addEventListener("click", () => {
+
+  timer_info.hh = parseInt(document.getElementById("hour_inp").value)
+  timer_info.mm = parseInt(document.getElementById("min_inp").value)
+  timer_info.ss = parseInt(document.getElementById("sec_inp").value)
+  timer_info.started = false
+  if (!timer_info.hh) { timer_info.hh = 0 }
+  if (!timer_info.mm) { timer_info.mm = 0 }
+  if (!timer_info.ss) { timer_info.ss = 0 }
+
+
+
+  timer_info.ms = new Date().setSeconds(new Date().getSeconds() +
+    (timer_info.hh * Math.pow(60, 2) + timer_info.mm * 60 + timer_info.ss))
+})
+
 const cavas = document.getElementById("canvas")
-cavas.height = 420
-cavas.width = 500
-
 const ctx = cavas.getContext('2d')
+cavas.height = 216;
+cavas.width = 512;
 
-function showTime() {
-  const time = new Date();
-  const hours = time.getHours();
-  const min = time.getMinutes();
-  const sec = time.getSeconds();
-  const timerArr = [parseInt(hours / 10), hours % 10, 10, parseInt(min / 10), min % 10, 10, parseInt(sec / 10), sec % 10]
+function runTimer() {
+  const now = new Date().getTime()
+  const target = new Date(timer_info.ms).getTime()
+  const difference = (target - now) / 1000
+  timer_info.hh = Math.floor((difference % (60 * 60 * 24)) / (60 * 60))
+  timer_info.mm = Math.floor((difference % (60 * 60)) / 60)
+  timer_info.ss = Math.floor(difference % 60)
+}
+
+
+function renderTimer() {
+  let hours = timer_info.hh;
+  let min = timer_info.mm;
+  let sec = timer_info.ss;
+  if (hours < 0 || min < 0 || sec < 0) {
+    hours = min = sec = 0
+    timer_info.started = false
+  }
+  let timerArr = [parseInt(hours / 10), hours % 10, 10, parseInt(min / 10), min % 10, 10, parseInt(sec / 10), sec % 10]
+
+
+
 
   for (let i = 0; i < timerArr.length; i++) {
     const img = imageCache[timerArr[i]]
-    ctx.drawImage(img, i * 64, 0, 64, 64)
+    ctx.drawImage(img, i * 64, 76, 64, 64)
   }
 
 
-}
 
-const timePerFrame = 1000 / 30
+}
+const timePerFrame = 1000 / 15
 
 let lastTime = null;
 let acc = 0;
@@ -58,51 +102,16 @@ function animate(time) {
     acc -= timePerFrame;
 
   }
-  ctx.clearRect(0, 0, cavas.width, cavas.height);
-  showTime();
+  ctx.fillStyle = "#005050";
+
+  ctx.fillRect(0, 0, cavas.width, cavas.height);
+  if (timer_info.started) {
+    runTimer();
+  }
+  renderTimer();
   requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);
-
-
-
-class Timer {
-
-  factor = 60;
-  static state = {
-    stop: 0,
-    start: 1,
-    reset: -1
-  }
-  default = 25
-  constructor(hours, minutes, seconds, activeState) {
-    this.time = hours * this.factor * this.factor + minutes * this.factor + seconds;
-    this.activeState = activeState;
-  }
-  setTimer(hours, minutes, seconds) {
-    this.time = hours * this.factor * this.factor + minutes * this.factor + seconds;
-  }
-  startTimer() {
-    switch (this.activeState) {
-      case Timer.state.start:
-        if (this.activeState == Timer.state.start) {
-          this.time--;
-          setInterval(this.startTimer(), 1000)
-          console.debug(this.time)
-        }
-        break;
-      case Timer.state.reset:
-        this.time = 25
-        break;
-      case Timer.state.stop:
-        while (this.activeState == Timer.state.stop)
-          break;
-    }
-  }
-
-
-}
-
 
 
 

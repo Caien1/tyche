@@ -2,19 +2,38 @@
 <html>
   <head>
     <title>clock</title>
+    <link rel="stylesheet" type="" href="./clock.css">
   </head>
   <body>
     <header>
 
-
     </header>
+    <div class ="display">
 
-        
-    <canvas id="canvas"></canvas></div>
-    <canvas id="timer"></canvas></div>
-      <script type= "module" src="./clock.js">
-          
-      </script>
+      <canvas id="canvas"></canvas>  
+    </div>
+    <div class="container">
+
+ <div id="inp_field" class="deceny">
+      <label for="hh"> HH
+        <input type="number" id="hour_inp" name="hh" min="0"  max="60" default ="0">
+        <label for="mm">MM</label>
+        <input type="number" id ="min_inp" name="mm" min="0" max="60" default ="0">
+        <label for="ss" min ="0">SS</label>
+        <input type="number" id ="sec_inp" name="ss" min="0" max="60" maxlengh="2"default="0"><br>
+
+    </div>
+
+      <div class="deceny">
+<button id="save">save changes</button>
+
+      </div> 
+
+    <button id="start_stop">start</button>
+
+    </div>
+    <script type= "module" src="./clock.js">
+    </script>
   </body> 
   <footer>
 
