@@ -5,7 +5,10 @@ for (let i = 0; i < assetNumber.length; i++) {
   img.src = assetNumber[i]
   imageCache.push(img)
 }
+
+const palette = [{ "Silver": "c4b1ae", "Silver 2": "b4ada3", "Khaki Beige": "bfb59e", "Khaki Beige 2": "cab7a2", "Grey Olive": "858786" }];
 const timer_info = {
+  mode: 0, // current modes 3
   hh: 0,
   mm: 0,
   ss: 0,
@@ -51,10 +54,12 @@ save.addEventListener("click", () => {
 
 const cavas = document.getElementById("canvas")
 const ctx = cavas.getContext('2d')
+
 cavas.height = 216;
 cavas.width = 512;
 
 function runTimer() {
+
   const now = new Date().getTime()
   const target = new Date(timer_info.ms).getTime()
   const difference = (target - now) / 1000
@@ -65,16 +70,19 @@ function runTimer() {
 
 
 function renderTimer() {
+  if (!timer_info.started) {
+    ctx.drawImage(imageCache[11], 0, 0, 512, 64)
+  }
   let hours = timer_info.hh;
   let min = timer_info.mm;
   let sec = timer_info.ss;
+
   if (hours < 0 || min < 0 || sec < 0) {
     hours = min = sec = 0
     timer_info.started = false
   }
-  let timerArr = [parseInt(hours / 10), hours % 10, 10, parseInt(min / 10), min % 10, 10, parseInt(sec / 10), sec % 10]
 
-
+  const timerArr = [parseInt(hours / 10), hours % 10, 10, parseInt(min / 10), min % 10, 10, parseInt(sec / 10), sec % 10]
 
 
   for (let i = 0; i < timerArr.length; i++) {
@@ -83,6 +91,30 @@ function renderTimer() {
   }
 
 
+
+}
+function renderTheme() {
+
+  ctx.fillStyle = "#b4ada3";
+  ctx.fillRect(0, 0, cavas.width, cavas.height)
+}
+
+
+function renderMode() {
+  switch (timer_info.mode) {
+    case 0:
+
+      ctx.drawImage(imageCache[12], 0, 0, 128, 64);
+      break;
+    case 1:
+
+      ctx.drawImage(imageCache[13], 0, 0, 128, 64);
+      break;
+    case 3:
+
+      ctx.drawImage(imageCache[14], 0, 0, 128, 64);
+      break;
+  }
 
 }
 const timePerFrame = 1000 / 15
@@ -102,12 +134,10 @@ function animate(time) {
     acc -= timePerFrame;
 
   }
-  ctx.fillStyle = "#005050";
 
-  ctx.fillRect(0, 0, cavas.width, cavas.height);
-  if (timer_info.started) {
-    runTimer();
-  }
+  renderTheme()
+  renderMode();
+  if (timer_info.started) runTimer();
   renderTimer();
   requestAnimationFrame(animate);
 }

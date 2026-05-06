@@ -1,6 +1,6 @@
 html{
-  background:#333;
-  color:#fff;
+  background:#c4b1ae;
+  color:#858786;
 }
 
 #inp_field{
@@ -39,4 +39,12 @@ padding:1rem;
 
 
 }
-input{ width:2rem; }
+input{ width:2rem;
+  color:#;
+
+  background-color:#b4b59e;
+}
+button{
+
+  background-color:#b4b59e;
+}
