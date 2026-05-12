@@ -16,7 +16,7 @@ const ctx = cavas.getContext('2d')
 cavas.height = 216;
 cavas.width = 512;
 
-
+//INFO:data defs
 const timer_info = {
   mode: 0, // current modes 3
 
@@ -66,51 +66,29 @@ const global_state = {
 
 }
 
-
 const timer_handle = [timer_info.pomodoro, timer_info.short_break, timer_info.long_break]
+const g_state_handle = [global_state.pomodoro, global_state.short_break, global_state.long_break]
 
+
+//INFO:Functions
 function initTimer() {
-  timer_handle[0].hh = parseInt(global_state.pomodoro.hh) ?? 0;
-  timer_handle[0].mm = parseInt(global_state.pomodoro.mm) ?? 0;
-  timer_handle[0].ss = parseInt(global_state.pomodoro.ss) ?? 0;
-
+  for (let i = 0; i < timer_handle.length; i++) {
+    timer_handle[i].hh = parseInt(g_state_handle[i].hh) || 0;
+    timer_handle[i].mm = parseInt(g_state_handle[i].mm) || 0;
+    timer_handle[i].ss = parseInt(g_state_handle[i].ss) || 0;
+  }
 
 }
-const mode = document.getElementById("mode_changer")
-mode.addEventListener("click", () => {
-  timer_info.started = false
-  timer_info.mode = (timer_info.mode + 1) % 3;
-  timer_info.started = true;
-})
-const toggle = document.getElementById("start_stop")
-toggle.addEventListener("click", () => {
+function loadSetting() {
 
-  timer_handle[timer_info.mode].ms = new Date().setSeconds(new Date().getSeconds() +
-    (timer_handle[timer_info.mode].hh * Math.pow(60, 2) +
-      timer_handle[timer_info.mode].mm * 60 +
-      timer_handle[timer_info.mode].ss))
-
-  console.log(timer_handle[timer_info.mode].ms)
-  timer_info.started = true;
-})
-
-const save = document.getElementById("save")
-save.addEventListener("click", () => {
-  global_state.pomodoro.hh = document.getElementById("hour_inp").value ?? global_state.pomodoro.hh
-  global_state.pomodoro.mm = document.getElementById("min_inp").value ?? global_state.pomodoro.mm
-  global_state.pomodoro.ss = document.getElementById("sec_inp").value ?? global_state.pomodoro.mm
-
-  global_state.long_break.hh = document.getElementById("l_hour_inp").value ?? global_state.long_break.hh
-  global_state.long_break.mm = document.getElementById("l_min_inp").value ?? global_state.long_break.mm
-  global_state.long_break.ss = document.getElementById("l_sec_inp").value ?? global_state.long_break.ss
-
-  global_state.short_break.hh = document.getElementById("s_hour_inp").value ?? global_state.short_break.hh
-  global_state.short_break.mm = document.getElementById("s_min_inp").value ?? global_state.short_break.mm
-  global_state.short_break.ss = document.getElementById("s_min_inp").value ?? global_state.short_break.ss
-
-  initTimer()
-
-})
+  const user_settings = JSON.parse(localStorage.getItem("settings")) || global_state
+  const user_setting_handle = [user_settings.pomodoro, user_settings.short_break, user_settings.long_break]
+  for (let i = 0; i < timer_handle.length; i++) {
+    g_state_handle[i].hh = parseInt(user_setting_handle[i].hh) || 0;
+    g_state_handle[i].mm = parseInt(user_setting_handle[i].mm) || 0;
+    g_state_handle[i].ss = parseInt(user_setting_handle[i].ss) || 0;
+  }
+}
 
 function runTimer() {
 
@@ -133,7 +111,6 @@ function renderTimer() {
     hours = min = sec = 0
     timer_info.started = false
   }
-  console.log(hours, min, sec)
   const timerArr = [parseInt(hours / 10), hours % 10, 10, parseInt(min / 10), min % 10, 10, parseInt(sec / 10), sec % 10]
 
   for (let i = 0; i < timerArr.length; i++) {
@@ -168,7 +145,58 @@ function renderModeAndTheme() {
 
 }
 
+//INFO:Event functions
 
+function change_mode() {
+  timer_info.started = false;
+  timer_info.mode = (timer_info.mode + 1) % 3;
+  toggle_current_timer();
+  timer_info.started = false;
+  mode.innerHTML = `mode: ${timer_info.mode}`
+}
+
+function toggle_current_timer() {
+
+
+  timer_info.started = !timer_info.started
+  timer_handle[timer_info.mode].ms = new Date().setSeconds(new Date().getSeconds() +
+    (timer_handle[timer_info.mode].hh * Math.pow(60, 2) +
+      timer_handle[timer_info.mode].mm * 60 +
+      timer_handle[timer_info.mode].ss))
+
+}
+//INFO:Events listeners
+const mode = document.getElementById("mode_changer")
+mode.addEventListener("click", change_mode)
+
+const toggle = document.getElementById("start_stop")
+toggle.addEventListener("click", toggle_current_timer)
+
+
+const save = document.getElementById("save")
+save.addEventListener("click", () => {
+  global_state.pomodoro.hh = (document.getElementById("hour_inp").value) || global_state.pomodoro.hh
+  global_state.pomodoro.mm = (document.getElementById("min_inp").value) || global_state.pomodoro.mm
+  global_state.pomodoro.ss = (document.getElementById("sec_inp").value) || global_state.pomodoro.mm
+
+  global_state.long_break.hh = document.getElementById("l_hour_inp").value || global_state.long_break.hh
+  global_state.long_break.mm = document.getElementById("l_min_inp").value || global_state.long_break.mm
+  global_state.long_break.ss = document.getElementById("l_sec_inp").value || global_state.long_break.ss
+
+  global_state.short_break.hh = document.getElementById("s_hour_inp").value || global_state.short_break.hh
+  global_state.short_break.mm = document.getElementById("s_min_inp").value || global_state.short_break.mm
+  global_state.short_break.ss = document.getElementById("s_min_inp").value || global_state.short_break.ss
+
+  //INFO:this Inits the values
+  initTimer()
+  localStorage.clear()
+  localStorage.setItem("settings", JSON.stringify(global_state))
+
+})
+
+//INFO:Main Loop
+loadSetting()
+initTimer()
 
 const timePerFrame = 1000 / 10
 let lastTime = null;
