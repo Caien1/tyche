@@ -13,5 +13,6 @@ import paused from "./assets/paused.webp"
 import pomo from "./assets/pomo.webp"
 import short_break from "./assets/shorty_break.webp"
 import long_break from "./assets/long_break.webp"
+import run from "./assets/running.webp"
 
-export const assetNumber = [num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, sep, paused, pomo, long_break, short_break]
+export const assetNumber = [num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, sep, paused, pomo, long_break, short_break, run]
