@@ -101,9 +101,6 @@ function runTimer() {
 }
 
 function renderTimer() {
-  if (!timer_info.started) {
-    ctx.drawImage(imageCache[11], 0, 0, 512, 64)
-  }
   let hours = parseInt(timer_handle[timer_info.mode].hh);
   let min = parseInt(timer_handle[timer_info.mode].mm);
   let sec = parseInt(timer_handle[timer_info.mode].ss);
@@ -126,9 +123,11 @@ function renderModeAndTheme() {
   //TODO: create themes etc
   switch (timer_info.mode) {
     case 0:
-      ctx.drawImage(imageCache[12], 0, 0, 128, 64);
       ctx.fillStyle = "#b4ada3";
+
       ctx.fillRect(0, 0, cavas.width, cavas.height)
+
+      ctx.drawImage(imageCache[12], 0, 0, 128, 64);
       break;
     case 1:
       ctx.fillStyle = "#c4b1ae";
@@ -141,13 +140,23 @@ function renderModeAndTheme() {
       ctx.fillRect(0, 0, cavas.width, cavas.height)
       ctx.drawImage(imageCache[14], 0, 0, 128, 64);
       break;
+
+
+
   }
 
+  //paused or not paused
+  if (!timer_info.started) {
+    ctx.drawImage(imageCache[11], 192, 75 + 64, 128, 64)
+  } else {
+
+    ctx.drawImage(imageCache[15], 192, 75 + 64, 128, 64)
+  }
 }
 
 //INFO:Event functions
 
-function change_mode() {
+const change_mode = () => {
   timer_info.started = false;
   timer_info.mode = (timer_info.mode + 1) % 3;
   toggle_current_timer();
@@ -155,7 +164,7 @@ function change_mode() {
   mode.innerHTML = `mode: ${timer_info.mode}`
 }
 
-function toggle_current_timer() {
+const toggle_current_timer = () => {
 
 
   timer_info.started = !timer_info.started
@@ -194,6 +203,8 @@ save.addEventListener("click", () => {
 
 })
 
+
+
 //INFO:Main Loop
 loadSetting()
 initTimer()
@@ -215,6 +226,7 @@ function animate(time) {
   }
 
   renderModeAndTheme();
+
   if (timer_info.started) runTimer();
   renderTimer();
   requestAnimationFrame(animate);
