@@ -62,15 +62,26 @@ const global_state = {
     mm: 15,
     ss: 0,
   }
-
-
 }
+const theme = [{
+  color: "#b4ada3",
+  icon: 12,
+}, {
+  color: "#c4b1ae",
+  icon: 13,
+}, {
+  color: "#b5b59e",
+  icon: 14,
+}]
 
+//INFO:helpers short hand
 const timer_handle = [timer_info.pomodoro, timer_info.short_break, timer_info.long_break]
 const g_state_handle = [global_state.pomodoro, global_state.short_break, global_state.long_break]
 
 
 //INFO:Functions
+//
+//INFO:State changing functions
 function initTimer() {
   for (let i = 0; i < timer_handle.length; i++) {
     timer_handle[i].hh = parseInt(g_state_handle[i].hh) || 0;
@@ -95,19 +106,22 @@ function runTimer() {
   const now = new Date().getTime()
   const target = new Date(timer_handle[timer_info.mode].ms).getTime()
   const difference = (target - now) / 1000
-  timer_handle[timer_info.mode].hh = Math.floor((difference % (60 * 60 * 24)) / (60 * 60))
-  timer_handle[timer_info.mode].mm = Math.floor((difference % (60 * 60)) / 60)
-  timer_handle[timer_info.mode].ss = Math.floor(difference % 60)
+  const current_time = timer_handle[timer_info.mode]
+  current_time.hh = Math.floor((difference % (60 * 60 * 24)) / (60 * 60))
+  current_time.mm = Math.floor((difference % (60 * 60)) / 60)
+  current_time.ss = Math.floor(difference % 60)
+  if (current_time.hh < 0 || current_time.mm < 0 || current_time.ss < 0) {
+    current_time.hh = current_time.ss = current_time.mm = 0
+    timer_info.started = false
+  }
 }
 
+//INFO:Rendering Functions
 function renderTimer() {
+  //TODO:dynamically genrate and render timeArr
   let hours = parseInt(timer_handle[timer_info.mode].hh);
   let min = parseInt(timer_handle[timer_info.mode].mm);
   let sec = parseInt(timer_handle[timer_info.mode].ss);
-  if (hours < 0 || min < 0 || sec < 0) {
-    hours = min = sec = 0
-    timer_info.started = false
-  }
   const timerArr = [parseInt(hours / 10), hours % 10, 10, parseInt(min / 10), min % 10, 10, parseInt(sec / 10), sec % 10]
 
   for (let i = 0; i < timerArr.length; i++) {
@@ -120,41 +134,24 @@ function renderTimer() {
 
 
 function renderModeAndTheme() {
+
   //TODO: create themes etc
-  switch (timer_info.mode) {
-    case 0:
-      ctx.fillStyle = "#b4ada3";
-
-      ctx.fillRect(0, 0, cavas.width, cavas.height)
-
-      ctx.drawImage(imageCache[12], 0, 0, 128, 64);
-      break;
-    case 1:
-      ctx.fillStyle = "#c4b1ae";
-      ctx.fillRect(0, 0, cavas.width, cavas.height)
-      ctx.drawImage(imageCache[13], 0, 0, 128, 64);
-      break;
-    case 2:
-
-      ctx.fillStyle = "#b5b59e";
-      ctx.fillRect(0, 0, cavas.width, cavas.height)
-      ctx.drawImage(imageCache[14], 0, 0, 128, 64);
-      break;
-
-
-
-  }
-
+  ctx.fillStyle = theme[timer_info.mode].color;
+  ctx.fillRect(0, 0, cavas.width, cavas.height)
+  ctx.drawImage(imageCache[theme[timer_info.mode].icon], 0, 0, 128, 64);
   //paused or not paused
-  if (!timer_info.started) {
-    ctx.drawImage(imageCache[11], 192, 75 + 64, 128, 64)
-  } else {
-
-    ctx.drawImage(imageCache[15], 192, 75 + 64, 128, 64)
-  }
 }
 
 //INFO:Event functions
+function renderUIToggle() {
+  if (!timer_info.started) {
+    ctx.drawImage(imageCache[11], 192, 75 + 64, 128, 64)
+  } else {
+    ctx.drawImage(imageCache[15], 192, 75 + 64, 128, 64)
+  }
+
+
+}
 
 const change_mode = () => {
   timer_info.started = false;
@@ -165,7 +162,6 @@ const change_mode = () => {
 }
 
 const toggle_current_timer = () => {
-
 
   timer_info.started = !timer_info.started
   timer_handle[timer_info.mode].ms = new Date().setSeconds(new Date().getSeconds() +
@@ -186,7 +182,7 @@ const save = document.getElementById("save")
 save.addEventListener("click", () => {
   global_state.pomodoro.hh = (document.getElementById("hour_inp").value) || global_state.pomodoro.hh
   global_state.pomodoro.mm = (document.getElementById("min_inp").value) || global_state.pomodoro.mm
-  global_state.pomodoro.ss = (document.getElementById("sec_inp").value) || global_state.pomodoro.mm
+  global_state.pomodoro.ss = (document.getElementById("sec_inp").value) || global_state.pomodoro.ss
 
   global_state.long_break.hh = document.getElementById("l_hour_inp").value || global_state.long_break.hh
   global_state.long_break.mm = document.getElementById("l_min_inp").value || global_state.long_break.mm
@@ -194,11 +190,11 @@ save.addEventListener("click", () => {
 
   global_state.short_break.hh = document.getElementById("s_hour_inp").value || global_state.short_break.hh
   global_state.short_break.mm = document.getElementById("s_min_inp").value || global_state.short_break.mm
-  global_state.short_break.ss = document.getElementById("s_min_inp").value || global_state.short_break.ss
+  global_state.short_break.ss = document.getElementById("s_sec_inp").value || global_state.short_break.ss
 
   //INFO:this Inits the values
   initTimer()
-  localStorage.clear()
+  localStorage.removeItem("settings")
   localStorage.setItem("settings", JSON.stringify(global_state))
 
 })
@@ -222,10 +218,13 @@ function animate(time) {
   acc += deltaTime;
 
   while (acc >= timePerFrame) {
+
+    ///Think of doing some animations here
     acc -= timePerFrame;
   }
 
   renderModeAndTheme();
+  renderUIToggle()
 
   if (timer_info.started) runTimer();
   renderTimer();
