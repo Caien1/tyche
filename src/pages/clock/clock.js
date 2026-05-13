@@ -145,9 +145,9 @@ function renderModeAndTheme() {
 //INFO:Event functions
 function renderUIToggle() {
   if (!timer_info.started) {
-    ctx.drawImage(imageCache[11], 192, 75 + 64, 128, 64)
+    ctx.drawImage(imageCache[11], 192, 76 + 64, 128, 64)
   } else {
-    ctx.drawImage(imageCache[15], 192, 75 + 64, 128, 64)
+    ctx.drawImage(imageCache[15], 192, 76 + 64, 128, 64)
   }
 
 
@@ -170,6 +170,26 @@ const toggle_current_timer = () => {
       timer_handle[timer_info.mode].ss))
 
 }
+
+const detect_collison = (event) => {
+  const scaleX = cavas.width / cavas.offsetWidth;
+  const scaleY = cavas.height / cavas.offsetHeight;
+  const rect = cavas.getBoundingClientRect()
+  console.log(rect,)
+  console.log(event.clientX, event.clientY)
+  const x = (event.clientX - rect.left) * scaleX
+  const y = (event.clientY - rect.top) * scaleY
+  console.log(x, y)
+  //TODO:check sprite
+  if (x >= 192 && x <= 192 + 128) {
+    if (y >= 147 && y <= 175) {
+      console.log("BBOM")
+      toggle_current_timer()
+    }
+  }
+
+
+}
 //INFO:Events listeners
 const mode = document.getElementById("mode_changer")
 mode.addEventListener("click", change_mode)
@@ -177,6 +197,7 @@ mode.addEventListener("click", change_mode)
 const toggle = document.getElementById("start_stop")
 toggle.addEventListener("click", toggle_current_timer)
 
+cavas.addEventListener("click", detect_collison)
 
 const save = document.getElementById("save")
 save.addEventListener("click", () => {
