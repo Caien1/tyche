@@ -1,4 +1,4 @@
-import { assetNumber } from "../../assets.js";
+import { assetNumber, IMAGE_ENUM } from "../../assets.js";
 
 
 
@@ -65,22 +65,27 @@ const global_state = {
 }
 const theme = [{
   color: "#b4ada3",
-  icon: 12,
+  icon: IMAGE_ENUM.POMO,
 }, {
   color: "#c4b1ae",
-  icon: 13,
+  icon: IMAGE_ENUM.SHORT_BREAK,
 }, {
   color: "#b5b59e",
-  icon: 14,
+  icon: IMAGE_ENUM.LONG_BREAK,
 }]
 
+const uiElements = {
+  pause_run: { x: 192, y: 76 + 64, w: 128, h: 64 },
+  mode_rect: { x: 0, y: 0, w: 128, h: 64 },
+  //WARN: the x = 0 if rendered but its usage in loop make it a bit different 
+  digit_rect: { x: 64, y: 76, w: 64, h: 64 }
+}
 //INFO:helpers short hand
 const timer_handle = [timer_info.pomodoro, timer_info.short_break, timer_info.long_break]
 const g_state_handle = [global_state.pomodoro, global_state.short_break, global_state.long_break]
 
 
 //INFO:Functions
-//
 //INFO:State changing functions
 function initTimer() {
   for (let i = 0; i < timer_handle.length; i++) {
@@ -113,20 +118,21 @@ function runTimer() {
   if (current_time.hh < 0 || current_time.mm < 0 || current_time.ss < 0) {
     current_time.hh = current_time.ss = current_time.mm = 0
     timer_info.started = false
+    timer_info.finished = true
   }
 }
 
 //INFO:Rendering Functions
 function renderTimer() {
   //TODO:dynamically genrate and render timeArr
-  let hours = parseInt(timer_handle[timer_info.mode].hh);
-  let min = parseInt(timer_handle[timer_info.mode].mm);
-  let sec = parseInt(timer_handle[timer_info.mode].ss);
+  let hours = (timer_handle[timer_info.mode].hh);
+  let min = (timer_handle[timer_info.mode].mm);
+  let sec = (timer_handle[timer_info.mode].ss);
   const timerArr = [parseInt(hours / 10), hours % 10, 10, parseInt(min / 10), min % 10, 10, parseInt(sec / 10), sec % 10]
 
   for (let i = 0; i < timerArr.length; i++) {
     const img = imageCache[timerArr[i]]
-    ctx.drawImage(img, i * 64, 76, 64, 64)
+    ctx.drawImage(img, i * uiElements.digit_rect.x, uiElements.digit_rect.y, uiElements.digit_rect.w, uiElements.digit_rect.h)
   }
 
 
@@ -135,20 +141,21 @@ function renderTimer() {
 
 function renderModeAndTheme() {
 
-  //TODO: create themes etc
   ctx.fillStyle = theme[timer_info.mode].color;
   ctx.fillRect(0, 0, cavas.width, cavas.height)
-  ctx.drawImage(imageCache[theme[timer_info.mode].icon], 0, 0, 128, 64);
+  ctx.drawImage(imageCache[theme[timer_info.mode].icon], uiElements.mode_rect.x, uiElements.mode_rect.y, uiElements.mode_rect.w, uiElements.mode_rect.h);
   //paused or not paused
 }
 
 //INFO:Event functions
-function renderUIToggle() {
+function renderUIElements() {
   if (!timer_info.started) {
-    ctx.drawImage(imageCache[11], 192, 76 + 64, 128, 64)
+    ctx.drawImage(imageCache[IMAGE_ENUM.PAUSED], uiElements.pause_run.x, uiElements.pause_run.y, uiElements.pause_run.w, uiElements.pause_run.h)
   } else {
-    ctx.drawImage(imageCache[15], 192, 76 + 64, 128, 64)
+    ctx.drawImage(imageCache[IMAGE_ENUM.RUN], uiElements.pause_run.x, uiElements.pause_run.y, uiElements.pause_run.w, uiElements.pause_run.h)
   }
+
+
 
 
 }
@@ -175,15 +182,17 @@ const detect_collison = (event) => {
   const scaleX = cavas.width / cavas.offsetWidth;
   const scaleY = cavas.height / cavas.offsetHeight;
   const rect = cavas.getBoundingClientRect()
-  console.log(rect,)
-  console.log(event.clientX, event.clientY)
-  const x = (event.clientX - rect.left) * scaleX
-  const y = (event.clientY - rect.top) * scaleY
-  console.log(x, y)
-  //TODO:check sprite
-  if (x >= 192 && x <= 192 + 128) {
-    if (y >= 147 && y <= 175) {
-      console.log("BBOM")
+  const x = (event.clientX - rect.left) * 1
+  const y = (event.clientY - rect.top) * 1
+  //
+
+  //WARN:The sprite is made on the lower half cor some reson
+  //TODO:Fix the sprites and make a function named resolve collision of update ui which ittrates through aa ui etc etc
+
+  //
+  if (x >= uiElements.pause_run.x && x <= uiElements.pause_run.x + uiElements.pause_run.w) {
+    if (y >= uiElements.pause_run.y + 32 && y <= uiElements.pause_run.y + uiElements.pause_run.h) {
+      console.log("BOOM")
       toggle_current_timer()
     }
   }
@@ -245,7 +254,7 @@ function animate(time) {
   }
 
   renderModeAndTheme();
-  renderUIToggle()
+  renderUIElements()
 
   if (timer_info.started) runTimer();
   renderTimer();
