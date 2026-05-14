@@ -18,32 +18,32 @@ cavas.width = 512;
 
 //INFO:data defs
 //
-//TODO:this obj is overloaaded we gotta figure a way to make it more simple
-const timer_info = {
-  mode: 0, // current modes 3
+//WARN:There appears to be a bug that messes up the hr feild of pomodoro figure it out
+const timer_handle = [{
+  name: "pomodoro",
+  hh: 0,
+  mm: 0,
+  ss: 0,
+  ms: 0,
+}, {
+  name: "short_break",
+  hh: 0,
+  mm: 0,
+  ss: 0,
+  ms: 0,
+}, {
+  name: "long_break",
+  hh: 0,
+  mm: 0,
+  ss: 0,
+  ms: 0,
+}]
 
-  pomodoro: {
-    hh: 0,
-    mm: 0,
-    ss: 0,
-    ms: 0,
-  },
-  short_break: {
-    hh: 0,
-    mm: 0,
-    ss: 0,
-    ms: 0,
-  },
-  //
-  long_break: {
-    hh: 0,
-    mm: 0,
-    ss: 0,
-    ms: 0,
-  },
+
+const timer_info = {
+  mode: 0,
   started: false,
   finished: false,
-  //
 }
 
 
@@ -66,13 +66,13 @@ const global_state = {
 }
 
 const theme = [{
-  color: "#b4ada3",
+  color: "#03A062",
   icon: IMAGE_ENUM.POMO,
 }, {
-  color: "#c4b1ae",
+  color: "#462C7D",
   icon: IMAGE_ENUM.SHORT_BREAK,
 }, {
-  color: "#b5b59e",
+  color: "#59B292",
   icon: IMAGE_ENUM.LONG_BREAK,
 }]
 
@@ -92,8 +92,7 @@ const uiElements = {
 
 //INFO: helpers short hand
 //
-//TODO:these two shall not exists the fact that this exist => the data modelling of core is trash.. figure something out wait
-const timer_handle = [timer_info.pomodoro, timer_info.short_break, timer_info.long_break]
+//TODO:these two (now 1) shall not exists the fact that this exist => the data modelling of core is trash.. figure something out wait* 1 resolved
 const g_state_handle = [global_state.pomodoro, global_state.short_break, global_state.long_break]
 
 const timerArr = new Int8Array(8)
