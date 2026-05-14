@@ -14,8 +14,9 @@ import pomo from "./assets/pomo.webp"
 import short_break from "./assets/shorty_break.webp"
 import long_break from "./assets/long_break.webp"
 import run from "./assets/running.webp"
+import next_mode from "./assets/next_mode.webp"
 
-export const assetNumber = [num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, sep, paused, pomo, long_break, short_break, run]
+export const assetNumber = [num0, num1, num2, num3, num4, num5, num6, num7, num8, num9, sep, paused, pomo, long_break, short_break, run, next_mode]
 export const IMAGE_ENUM = {
   NUM_0: 0,
   NUM_1: 1,
@@ -32,6 +33,7 @@ export const IMAGE_ENUM = {
   POMO: 12,
   LONG_BREAK: 13,
   SHORT_BREAK: 14,
-  RUN: 15
+  RUN: 15,
+  NEXT_MODE: 16
 
 } 
