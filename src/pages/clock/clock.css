@@ -1,9 +1,9 @@
 html{
-  background:#c4b1ae;
+  background:#333333;
   color:#858786;
 }
 
-#inp_field{
+.inp_field{
 width:50%;
   display:flex ;
   justify-content:center;
@@ -20,28 +20,17 @@ width:50%;
   justify-content:center;
   align-items:center;
 }
-#canvas{
+.holder{
 
-  background:white;
-  border:12px solid black;
+  border: 10px solid black;
   border-radius:7px;
-  box-shadow:0 5px 8px rgba(255,255,255,)
+
 }
 
-.setting_hide{
-}
+
 .deceny{
-margin:1rem;
-padding:1rem;
-
+margin:0.1rem;
+padding:0.1rem;
 
 }
-input{ width:2rem;
-  color:#;
 
-  background-color:#b4b59e;
-}
-button{
-
-  background-color:#b4b59e;
-}

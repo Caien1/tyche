@@ -9,26 +9,28 @@
 
     </header>
     <div class ="display">
+      <div class="holder">
 
       <canvas id="canvas"></canvas>  
+      </div>
     </div>
     <div class="container">
-<h1>Pomodoro</h1>
- <div id="inp_field" class="deceny">
+<h1>Pomodoro:</h1>
+ <div  class="deceny inp_field">
         <input type="number" id="hour_inp" name="hh" min="0"  max="60" default ="0">
         <input type="number" id ="min_inp" name="mm" min="0" max="60" default ="0">
         <input type="number" id ="sec_inp" name="ss" min="0" max="60" maxlengh="2" default="0"><br>
 
     </div>
 
-<h1>Short break</h1>
-      <div class="deceny">
+<h1>Short break:</h1>
+      <div class="deceny inp_field">
        <input type="number" id="s_hour_inp" name="hh" min="0"  max="60" default ="0">
         <input type="number" id ="s_min_inp" name="mm" min="0" max="60" default ="0">
         <input type="number" id ="s_sec_inp" name="ss" min="0" max="60" maxlengh="2" default="0"><br>
 </div>
-     <h1>Long Break</h1> 
-      <div class="deceny">
+     <h1>Long Break:</h1> 
+      <div class="deceny inp_field">
          <input type="number" id="l_hour_inp" name="hh" min="0"  max="60" default ="0">
         <input type="number" id ="l_min_inp" name="mm" min="0" max="60" default ="0">
         <input type="number" id ="l_sec_inp" name="ss" min="0" max="60" maxlengh="2" default="0"><br>
@@ -40,11 +42,9 @@
 
       </div> 
 
-    <button id="start_stop">start</button>
 
     </div>
 
-    <button id="mode_changer">mode</button>
     <script type= "module" src="./clock.js">
     </script>
   </body> 
